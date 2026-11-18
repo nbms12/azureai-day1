@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Deployment Models — Scenario Quiz</title>
+<style>
+  :root{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --card2:#243349;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --blue:#38bdf8;
+    --green:#34d399;
+    --amber:#fbbf24;
+    --red:#f87171;
+    --border:#334155;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    padding:24px;
+  }
+  .container{max-width:900px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:32px;}
+  header h1{font-size:1.8rem;margin-bottom:6px;}
+  header h1 span{
+    background:linear-gradient(90deg,var(--blue),var(--amber));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  header p{color:var(--muted);font-size:.95rem;}
+
+  /* ---------- Quiz Card ---------- */
+  .quiz-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:24px;
+    margin-bottom:22px;
+  }
+  .q-num{
+    display:inline-block;
+    background:rgba(56,189,248,.15);
+    color:var(--blue);
+    font-size:.75rem;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:4px 12px;
+    border-radius:20px;
+    margin-bottom:12px;
+  }
+  .scenario{
+    font-size:1rem;
+    color:var(--text);
+    margin-bottom:18px;
+    padding:14px 16px;
+    background:var(--card2);
+    border-left:4px solid var(--blue);
+    border-radius:8px;
+  }
+  .scenario strong{color:var(--blue);}
+
+  .options{display:grid;gap:10px;margin-bottom:16px;}
+  .option{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 16px;
+    background:var(--card2);
+    border:2px solid var(--border);
+    border-radius:10px;
+    cursor:pointer;
+    transition:all .15s;
+    font-size:.95rem;
+    user-select:none;
+  }
+  .option:hover{border-color:var(--blue);background:#2a3b52;}
+  .option.selected{border-color:var(--blue);background:rgba(56,189,248,.12);}
+  .option.correct{border-color:var(--green);background:rgba(52,211,153,.15);}
+  .option.wrong{border-color:var(--red);background:rgba(248,113,113,.15);}
+  .option input{display:none;}
+
+  .badge{
+    width:32px;height:32px;
+    border-radius:50%;
+    display:grid;place-items:center;
+    font-weight:700;
+    font-size:.85rem;
+    flex-shrink:0;
+    background:var(--border);
+    color:var(--muted);
+  }
+  .option.correct .badge{background:var(--green);color:#0f172a;}
+  .option.wrong .badge{background:var(--red);color:#0f172a;}
+  .option.selected .badge{background:var(--blue);color:#0f172a;}
+
+  /* ---------- Reveal button ---------- */
+  .reveal-btn{
+    background:linear-gradient(90deg,var(--blue),#6366f1);
+    color:#fff;
+    border:none;
+    padding:10px 22px;
+    border-radius:8px;
+    font-size:.9rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:opacity .2s;
+  }
+  .reveal-btn:hover{opacity:.88;}
+  .reveal-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+  .explanation{
+    display:none;
+    margin-top:16px;
+    padding:14px 16px;
+    background:rgba(52,211,153,.08);
+    border:1px solid rgba(52,211,153,.3);
+    border-radius:10px;
+    font-size:.9rem;
+    animation:fadeIn .3s;
+  }
+  .explanation.show{display:block;}
+  .explanation strong{color:var(--green);display:block;margin-bottom:4px;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- Score ---------- */
+  .score-box{
+    text-align:center;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:24px;
+    margin-top:8px;
+  }
+  .score-box h2{font-size:1.1rem;color:var(--muted);margin-bottom:8px;}
+  .score-box .score{
+    font-size:2.4rem;
+    font-weight:800;
+    background:linear-gradient(90deg,var(--blue),var(--amber));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .score-box p{color:var(--muted);font-size:.9rem;margin-top:6px;}
+
+  .reset-btn{
+    margin-top:14px;
+    background:transparent;
+    color:var(--blue);
+    border:2px solid var(--blue);
+    padding:8px 20px;
+    border-radius:8px;
+    font-size:.85rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .reset-btn:hover{background:rgba(56,189,248,.1);}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>☁️ Cloud Deployment Models — <span>Scenario Quiz</span></h1>
+    <p>Read each scenario and pick the best fit: <strong>Public</strong>, <strong>Private</strong>, or <strong>Hybrid</strong>. Then click "Reveal Answer".</p>
+  </header>
+
+  <!-- ============ Q1 ============ -->
+  <div class="quiz-card" data-answer="public">
+    <div class="q-num">Question 1</div>
+    <div class="scenario">
+    strong>Scenario:</strong> A startup launches a food delivery app. It needs to scale fast during launch week with no upfront hardware cost.
+    </div>
+    <div class="options">
+      <label class="option" data-value="public"><span class="badge">A</span>Public Cloud</label>
+      <label class="option" data-value="private"><span class="badge">B</span>Private Cloud</label>
+      <label class="option" data-value="hybrid"><span class="badge">C</span>Hybrid Cloud</label>
+    </div>
+    <button class="reveal-btn">Reveal Answer</button>
+    <div class="explanation">
+      <strong>Answer: Public Cloud</strong>
+      Pay-as-you-go and near-unlimited scale make public cloud ideal for a startup that needs to grow fast without buying hardware.
+    </div>
+  </div>
+
+  <!-- ============ Q2 ============ -->
+  <div class="quiz-card" data-answer="private">
+    <div class="q-num">Question 2</div>
+    <div class="scenario">
+      <strong>Scenario:</strong> A national bank must store customer financial records under strict regulations that require data to remain on infrastructure it fully controls.
+    </div>
+    <div class="options">
+      <label class="option" data-value="public"><span class="badge">A</span>Public Cloud</label>
+      <label class="option" data-value="private"><span class="badge">B</span>Private Cloud</label>
+      <label class="option" data-value="hybrid"><span class="badge">C</span>Hybrid Cloud</label>
+    </div>
+    <button class="reveal-btn">Reveal Answer</button>
+    <div class="explanation">
+      <strong>Answer: Private Cloud</strong>
+      Full control over network, hardware, and security policy — plus data sovereignty and strict regulation — point to a private cloud.
+    </div>
+  </div>
+
+  <!-- ============ Q3 ============ -->
+  <div class="quiz-card" data-answer="hybrid">
+    <div class="q-num">Question 3</div>
+    <div class="scenario">
+      <strong>Scenario:</strong> A hospital keeps patient medical records in its own data center for compliance, but runs its public website and appointment booking on a cloud provider to handle traffic spikes.
+    </div>
+    <div class="options">
+      <label class="option" data-value="public"><span class="badge">A</span>Public Cloud</label>
+      <label class="option" data-value="private"><span class="badge">B</span>Private Cloud</label>
+      <label class="option" data-value="hybrid"><span class="badge">C</span>Hybrid Cloud</label>
+    </div>
+    <button class="reveal-btn">Reveal Answer</button>
+    <div class="explanation">
+      <strong>Answer: Hybrid Cloud</strong>
+      Sensitive data stays private while elastic workloads run on public cloud — connected by VPN or dedicated links.
+    </div>
+  </div>
+
+  <!-- ============ Q4 ============ -->
+  <div class="quiz-card" data-answer="public">
+    <div class="q-num">Question 4</div>
+    <div class="scenario">
+      <strong>Scenario:</strong> A global gaming company needs to serve millions of players across multiple regions with automatic scaling and pays only for what it uses each month.
+    </div>
+    <div class="options">
+      <label class="option" data-value="public"><span class="badge">A</span>Public Cloud</label>
+      <label class="option" data-value="private"><span class="badge">B</span>Private Cloud</label>
+      <label class="option" data-value="hybrid"><span class="badge">C</span>Hybrid Cloud</label>
+    </div>
+    <button class="reveal-btn">Reveal Answer</button>
+    <div class="explanation">
+      <strong>Answer: Public Cloud</strong>
+      Global regions, near-unlimited scale, and pay-as-you-go billing are the core strengths of public cloud providers like AWS, Azure, and GCP.
+    </div>
+  </div>
+
+  <!-- ============ Q5 ============ -->
+  <div class="quiz-card" data-answer="private">
+    <div class="q-num">Question 5</div>
+    <div class="scenario">
+      <strong>Scenario:</strong> A government defense agency runs legacy systems that must remain on-premises and requires full control over every hardware and network component.
+    </div>
+    <div class="options">
+      <label class="option" data-value="public"><span class="badge">A</span>Public Cloud</label>
+      <label class="option" data-value="private"><span class="badge">B</span>Private Cloud</label>
+      <label class="option" data-value="hybrid"><span class="badge">C</span>Hybrid Cloud</label>
+    </div>
+    <button class="reveal-btn">Reveal Answer</button>
+    <div class="explanation">
+      <strong>Answer: Private Cloud</strong>
+      Legacy systems, strict regulation, and the need for full hardware/network control make a private (or on-premises) deployment the right choice.
+    </div>
+  </div>
+
+  <!-- ============ Q6 ============ -->
+  <div class="quiz-card" data-answer="hybrid">
+    <div class="q-num">Question 6</div>
+    <div class="scenario">
+      <strong>Scenario:</strong> A retail company is migrating to the cloud step by step — keeping its core ERP system on-premises for now while moving its e-commerce storefront to a public cloud.
+    </div>
+    <div class="options">
+      <label class="option" data-value="public"><span class="badge">A</span>Public Cloud</label>
+      <label class="option" data-value="private"><span class="badge">B</span>Private Cloud</label>
+      <label class="option" data-value="hybrid"><span class="badge">C</span>Hybrid Cloud</label>
+    </div>
+    <button class="reveal-btn">Reveal Answer</button>
+    <div class="explanation">
+      <strong>Answer: Hybrid Cloud</strong>
+      Mixing on-premises infrastructure with public cloud — and migrating gradually — is the defining trait of a hybrid model.
+    </div>
+  </div>
+
+  <!-- ============ SCORE ============ -->
+  <div class="score-box">
+    <h2>Your Score</h2>
+    <div class="score"><span id="score">0</span> / 6</div>
+    <p>Answer all questions and reveal each answer to see your score update.</p>
+    <button class="reset-btn" onclick="resetQuiz()">Reset Quiz</button>
+  </div>
+
+</div>
+
+<script>
+  let answered = 0;
+  let correct = 0;
+
+  document.querySelectorAll('.quiz-card').forEach(card => {
+    const options = card.querySelectorAll('.option');
+    const btn = card.querySelector('.reveal-btn');
+    const explanation = card.querySelector('.explanation');
+    const answer = card.dataset.answer;
+    let selected = null;
+    let revealed = false;
+
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (revealed) return;
+        options.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        selected = opt.dataset.value;
+      });
+    });
+
+    btn.addEventListener('click', () => {
+      if (revealed) return;
+      if (!selected) {
+        btn.textContent = 'Pick an option first!';
+        setTimeout(() => btn.textContent = 'Reveal Answer', 1200);
+        return;
+      }
+      revealed = true;
+      btn.disabled = true;
+      btn.textContent = 'Answer Revealed ✓';
+
+      options.forEach(o => {
+        if (o.dataset.value === answer) o.classList.add('correct');
+        else if (o.classList.contains('selected')) o.classList.add('wrong');
+      });
+
+      explanation.classList.add('show');
+      answered++;
+      if (selected === answer) correct++;
+      document.getElementById('score').textContent = correct;
+    });
+  });
+
+  function resetQuiz() {
+    location.reload();
+  }
+</script>
+</body>
+</html>
